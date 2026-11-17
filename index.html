@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buscador de descuentos INAPAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0B5F5B;--teal-d:#073F3C;--gold:#F5B21B;--ink:#14262B;--muted:#44575C;--line:#D5DEDC;--bg:#F3F6F5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:18px;line-height:1.4}
+header{background:var(--teal);color:#fff;padding:32px 24px 28px}
+.wrap{max-width:1180px;margin:0 auto}
+.kicker{font-weight:700;letter-spacing:.12em;font-size:14px}
+h1{font-family:Archivo,sans-serif;font-weight:900;font-size:clamp(32px,5vw,52px);line-height:1.02;margin:8px 0 10px}
+header p{margin:0;font-size:19px;max-width:760px}
+header p.aviso{margin-top:10px;font-size:15px;opacity:.85}
+footer a{color:var(--teal)}
+.panel{background:#fff;border-radius:18px;margin:-18px auto 0;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 16px;position:relative;box-shadow:0 4px 18px rgba(20,38,43,.08)}
+label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+label span.n{font-family:Archivo,sans-serif;color:var(--teal)}
+select,input{font:inherit;font-size:17px;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:48px;width:100%}
+select:focus,input:focus{outline:3px solid var(--gold);outline-offset:1px;border-color:var(--teal)}
+.summary{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 10px}
+.summary h2{font-family:Archivo,sans-serif;font-weight:800;font-size:24px;margin:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-size:15px}
+button{font:inherit;cursor:pointer}
+.reset{background:none;border:2px solid var(--teal);color:var(--teal);border-radius:10px;padding:10px 16px;font-weight:700;min-height:48px}
+.reset:hover{background:var(--teal);color:#fff}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:16px;overflow:hidden}
+th{text-align:left;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:14px 16px;border-bottom:2px solid var(--line);background:#fff}
+th button{background:none;border:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;display:inline-flex;gap:6px;align-items:center}
+th button[aria-sort]{color:var(--teal)}
+td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;background:var(--gold);border-radius:999px;padding:6px 14px;font-family:Archivo,sans-serif;font-weight:900;font-size:22px;white-space:nowrap}
+.badge.txt{background:#E6ECEA;font-size:15px;font-family:inherit;font-weight:700}
+.name{font-weight:700;font-size:19px}
+.sub{color:var(--muted);font-size:15px}
+.detail{font-size:15px;color:var(--muted);max-width:280px}
+details summary{cursor:pointer;color:var(--teal);font-weight:700}
+.more{display:block;margin:18px auto 0;background:var(--teal);color:#fff;border:0;border-radius:12px;padding:14px 26px;font-weight:700;min-height:48px}
+.more:hover{background:var(--teal-d)}
+.empty{background:#fff;border-radius:16px;padding:28px;text-align:center;color:var(--muted)}
+footer{color:var(--muted);font-size:15px;padding:28px 0 40px}
+footer ul{padding-left:20px;margin:8px 0}
+main{padding:0 16px}
+@media (max-width:760px){
+  table,thead,tbody,tr,td{display:block}
+  thead{display:none}
+  table{background:none}
+  tr{background:#fff;border-radius:14px;margin-bottom:12px;padding:6px 0}
+  td{border:0;padding:6px 16px}
+  td.c-d{padding-top:12px}
+  .detail{max-width:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">CREDENCIAL INAPAM · 60 AÑOS O MÁS</div>
+    <h1>Buscador de descuentos</h1>
+    <p>Escoge qué quieres hacer y dónde. Te mostramos los lugares con descuento, del más alto al más bajo.</p>
+    <p class="aviso">Página no oficial. Datos del directorio del INAPAM de octubre 2026.</p>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <form class="panel" id="f" aria-label="Filtros">
+      <label><span><span class="n">1</span> ¿Qué quieres hacer?</span><select id="sec"></select></label>
+      <label><span>Tipo de lugar</span><select id="sub"></select></label>
+      <label><span><span class="n">2</span> Estado</span><select id="est"></select></label>
+      <label><span>Municipio o alcaldía</span><select id="mun"></select></label>
+      <label><span>Buscar por nombre (opcional)</span><input id="q" type="search" placeholder="Ej. dental, Devlyn, tacos"></label>
+    </form>
+    <div class="summary">
+      <h2 id="count" aria-live="polite">Cargando…</h2>
+      <button class="reset" type="button" id="reset">Borrar filtros</button>
+    </div>
+    <div id="out"></div>
+    <button class="more" type="button" id="more" hidden>Ver más</button>
+    <footer>
+      <strong>Antes de ir</strong>
+      <ul>
+        <li>Enseña tu credencial <b>antes</b> de pagar. Cada lugar tiene sus condiciones: llama o pregunta primero.</li>
+        <li>Metro, Mexibús, Mexicable y museos del INAH/INBAL son gratis con la credencial, pero no vienen en este directorio.</li>
+        <li>Fuente: Directorio de Beneficios con Credencial INAPAM, octubre 2026 (<a href="https://www.gob.mx/inapam">gob.mx/inapam</a>). Los tipos de lugar los asignamos según el nombre del negocio, así que puede haber errores.</li>
+        <li><b>Esta página no es del INAPAM ni del gobierno.</b> Es un proyecto personal que ordena el directorio público para que sea más fácil buscar. Si algo no coincide, lo que vale es el directorio oficial y lo que te diga el establecimiento.</li>
+        <li>Datos, código y cómo se hizo: <a href="https://github.com/paola-arguello/inapam-descuentos">github.com/paola-arguello/inapam-descuentos</a>.</li>
+      </ul>
+    </footer>
+  </div>
+</main>
+<script>
+(function(){
+  const SECS=['Salir y divertirte','Viajar y moverte','Cuidar tu salud','Trámites','Compras y hogar'];
+  const $=id=>document.getElementById(id);
+  const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e;};
+  let rows=[],shown=0,list=[],sortKey='pct',sortDir=-1;
+  const PAGE=60;
+  function opts(sel,values,allLabel,keep){
+    const prev=keep?sel.value:'';
+    sel.replaceChildren();
+    const a=el('option',null,allLabel);a.value='';sel.append(a);
+    values.forEach(v=>{const o=el('option',null,v);o.value=v;sel.append(o);});
+    sel.value=values.includes(prev)?prev:'';
+  }
+  const coll=new Intl.Collator('es');
+  function uniq(a){return [...new Set(a)].sort(coll.compare);}
+  function refreshDependent(){
+    const s=$('sec').value, e=$('est').value;
+    opts($('sub'),uniq(rows.filter(r=>!s||r.actividad===s).map(r=>r.tipo)),'Todos los tipos',true);
+    opts($('mun'),uniq(rows.filter(r=>!e||r.estado===e).map(r=>r.municipio)),e?'Todo el estado':'Escoge un estado primero',true);
+    $('mun').disabled=!e;
+  }
+  const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  function apply(){
+    const s=$('sec').value,t=$('sub').value,e=$('est').value,m=$('mun').value,q=norm($('q').value.trim());
+    list=rows.filter(r=>(!s||r.actividad===s)&&(!t||r.tipo===t)&&(!e||r.estado===e)&&(!m||r.municipio===m)&&(!q||r._q.includes(q)));
+    const k=sortKey,dir=sortDir;
+    list.sort((a,b)=>{
+      if(k==='pct'){const x=a.pct??-1,y=b.pct??-1;if(x!==y)return (x-y)*dir;return coll.compare(a.nombre,b.nombre);}
+      return coll.compare(a[k],b[k])*dir||((b.pct??-1)-(a.pct??-1));
+    });
+    shown=0;$('out').replaceChildren();
+    const n=list.length;
+    $('count').textContent=n?`${n.toLocaleString('es-MX')} lugar${n===1?'':'es'} con descuento`:'Sin resultados';
+    if(!n){const d=el('div','empty','No encontramos lugares con esos filtros. Prueba con todo el estado o con otro tipo de lugar.');$('out').append(d);$('more').hidden=true;return;}
+    buildTable();more();
+  }
+  let tbody;
+  function head(label,key){
+    const th=el('th');const b=el('button',null,label);b.type='button';
+    if(sortKey===key){b.setAttribute('aria-sort',sortDir<0?'descending':'ascending');b.textContent=label+(sortDir<0?' ↓':' ↑');}
+    b.addEventListener('click',()=>{if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=key==='pct'?-1:1;}apply();});
+    th.append(b);return th;
+  }
+  function buildTable(){
+    const t=el('table');const th=el('thead');const tr=el('tr');
+    tr.append(head('Descuento','pct'),head('Lugar','nombre'),head('Dónde','municipio'),el('th',null,'Teléfono'),el('th',null,'Detalle'));
+    th.append(tr);tbody=el('tbody');t.append(th,tbody);$('out').append(t);
+  }
+  function more(){
+    const end=Math.min(shown+PAGE,list.length);
+    for(let i=shown;i<end;i++){
+      const r=list[i],tr=el('tr');
+      const c1=el('td','c-d');
+      if(r.pct!=null){c1.append(el('span','badge',r.pct>=100?'GRATIS':(Number.isInteger(r.pct)?r.pct:r.pct.toFixed(1))+'%'));}
+      else c1.append(el('span','badge txt','Ver detalle'));
+      const c2=el('td');c2.append(el('div','name',r.nombre),el('div','sub',r.tipo));
+      const c3=el('td');c3.append(el('div',null,r.domicilio),el('div','sub',r.municipio+', '+r.estado));
+      const c4=el('td',null,r.telefono||'—');
+      const c5=el('td','detail');
+      if(r.descuento.length>70){const d=el('details');d.append(el('summary',null,r.descuento.slice(0,60)+'…'),el('div',null,r.descuento));c5.append(d);}else c5.textContent=r.descuento;
+      tr.append(c1,c2,c3,c4,c5);tbody.append(tr);
+    }
+    shown=end;$('more').hidden=shown>=list.length;
+    const left=list.length-shown;
+    $('more').textContent=`Ver más (${left.toLocaleString('es-MX')} ${left===1?'restante':'restantes'})`;
+  }
+  $('more').addEventListener('click',more);
+  ['sec','est'].forEach(id=>$(id).addEventListener('change',()=>{refreshDependent();apply();save();}));
+  ['sub','mun'].forEach(id=>$(id).addEventListener('change',()=>{apply();save();}));
+  let tmr;$('q').addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(apply,200);});
+  $('f').addEventListener('submit',e=>e.preventDefault());
+  $('reset').addEventListener('click',()=>{['sec','sub','est','mun'].forEach(i=>$(i).value='');$('q').value='';refreshDependent();apply();save();});
+  function save(){try{localStorage.setItem('inapam-filtros',JSON.stringify({sec:$('sec').value,sub:$('sub').value,est:$('est').value,mun:$('mun').value}));}catch(e){}}
+  function load(){try{return JSON.parse(localStorage.getItem('inapam-filtros')||'null');}catch(e){return null;}}
+  fetch('datos.json').then(r=>r.json()).then(js=>{
+    rows=js.rows.map(a=>{const o={};js.cols.forEach((c,i)=>o[c]=a[i]);o._q=norm(o.nombre+' '+o.tipo+' '+o.domicilio+' '+o.descuento);return o;});
+    opts($('sec'),SECS.filter(s=>rows.some(r=>r.actividad===s)),'Todo',false);
+    opts($('est'),uniq(rows.map(r=>r.estado)),'Todo el país',false);
+    const p=load();
+    if(p){$('sec').value=p.sec||'';$('est').value=p.est||'';}
+    refreshDependent();
+    if(p){$('sub').value=p.sub||'';$('mun').value=p.mun||'';}
+    apply();
+  }).catch(()=>{$('count').textContent='No se pudieron cargar los datos. Recarga la página.';});
+})();
+</script>
+</body>
+</html>
