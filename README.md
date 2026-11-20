@@ -8,6 +8,8 @@ El INAPAM publica su Directorio de Beneficios como siete PDFs, uno por categorí
 
 **Esta página no es del INAPAM ni del gobierno.** La hice por mi cuenta a partir del directorio público. Si algo no coincide, lo que vale es el directorio oficial en [gob.mx/inapam](https://www.gob.mx/inapam) y lo que diga el establecimiento. Cada lugar tiene sus restricciones.
 
+Si encuentras un error o un lugar que ya no da descuento, escríbeme a pao.arguello.pascualli@gmail.com.
+
 ## Qué hay aquí
 
 | Archivo | Qué es |
